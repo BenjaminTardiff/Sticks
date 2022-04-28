@@ -1,13 +1,4 @@
 # STICKS
-
-p1 = [1, 1]
-p2 = [1, 1]
-game = True
-turn = ""
-again = ""
-splitable = False
-
-
 def tryParseInt(variable, exclution=False):
     while type(variable) != int and variable != exclution:
         try:
@@ -46,14 +37,27 @@ def hit(player, playerfingers, target, targetfingers):
     print()
     for i in range(2):
         if targetfingers[i] >= 5:
-            targetfingers[i] = 0
-            print(target, " lost hand ", i + 1)
-            if targetfingers[1] == 0 and targetfingers[0] == 0:
-                game = False
-                print(target, " loses! ", player, " wins!")
-                again = input("Want to play again? y or n ")
-                while again != "y" and again != "n":
-                    again = input("Invalid answer. Please enter y or n. ")
+            if wrapAround:
+                targetfingers[i] %= 5
+                if targetfingers == 0:
+                    print(target, " lost hand ", i + 1)
+                    if targetfingers[1] == 0 and targetfingers[0] == 0:
+                        game = False
+                        print(target, " loses! ", player, " wins!")
+                        again = input("Want to play again? y or n ")
+                        while again != "y" and again != "n":
+                            again = input("Invalid answer. Please enter y or n. ")
+                else:
+                    print(target, "'s hand wraped to", targetfingers[i] % 5)
+            else:
+                targetfingers[i] = 0
+                print(target, " lost hand ", i + 1)
+                if targetfingers[1] == 0 and targetfingers[0] == 0:
+                    game = False
+                    print(target, " loses! ", player, " wins!")
+                    again = input("Want to play again? y or n ")
+                    while again != "y" and again != "n":
+                        again = input("Invalid answer. Please enter y or n. ")
 
 
 def checkSplit(player):
@@ -86,6 +90,20 @@ def split(player):
     print()
 
 def main():
+    p1 = [1, 1]
+    p2 = [1, 1]
+    game = True
+    turn = ""
+    again = ""
+    splitable = False
+    global wrapAround
+    wrapAround = input("Wrap around(y/n): ")
+    while wrapAround != "y" and wrapAround != "n":
+        wrapAround = input("y or n only: ")
+    if wrapAround == "y":
+        wrapAround = True
+    else:
+        wraparound = False
     while game:
         print("Player 1")
         checkSplit(p1)
